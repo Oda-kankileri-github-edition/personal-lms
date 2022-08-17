@@ -1,0 +1,457 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: PLMS Server
+  contact:
+    email: mohkargan@gmail.com
+    url: 'https://github.com/Oda-kankileri-github-edition'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  x-logo:
+    url: './img/logo192.png'
+    altText: Trajectory logo
+  description: |
+    This is an **example** API to demonstrate features of the OpenAPI
+    specification.
+servers:
+  - url: https://www.plms.com/api
+    description: sample server
+tags:
+  - name: Auth
+    description: User login related services.
+  - name: Rack
+    description: Bookrack CRUD.
+  - name: Shelf
+    description: Shelf CRUD.
+  - name: Book
+    description: Book CRUD.
+  - name: Other
+    description: Other services.
+
+paths:
+  /login:
+    post:
+      operationId: login
+      summary: Login
+      description: Login to system and get JWT token and user info as response.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: username
+                password:
+                  type: string
+                  format: password
+                  description: password
+              required:
+                - username
+                - password
+      responses:
+        200:
+          description: Login Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logout:
+    post:
+      operationId: logout
+      summary: Logout
+      description: Logout from system by clearing JWT token.
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /register:
+    post:
+      operationId: register
+      summary: Register
+      description: Register a new user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      tags:
+        - Auth
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /renew-token:
+    post:
+      operationId: renewToken
+      summary: Renew Token
+      description: Renew JWT token.
+      tags:
+        - Auth
+      responses:
+        200:
+          description: JWT Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /check-username:
+    post:
+      operationId: checkUsername
+      summary: Check Username
+      description: Check if username is available.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckUsernameRequest'
+      responses:
+        200:
+          description: Username availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameAvailability'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /confirm-user:
+    post:
+      operationId: confirmUser
+      summary: Confirm User
+      description: Confirm user registration.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmUserRequest'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Success:
+      type: object
+      title: Success Response
+      description: Success title and message with request time.
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Request message
+    Error:
+      type: object
+      title: Error Response
+      description: Error title and message with request time.
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error title
+        message:
+          type: string
+          description: Error message
+        timestamp:
+          type: integer
+          format: int64
+          minimum: 1
+    Theme:
+      title: Theme
+      description: Front End theme settings
+      type: object
+      properties:
+        primaryColor:
+          type: string
+          pattern: ^$|^#(?:[0-9a-fA-F]{6})$
+          description: Primary theme color in hexadecimal, starting with \#
+        secondaryColor:
+          type: string
+          pattern: ^$|^#(?:[0-9a-fA-F]{6})$
+          description: Primary theme color in hexadecimal, starting with \#
+    User:
+      type: object
+      title: User information
+      description: User information for FE usage.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User id in uuid v4 format.
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+        firstName:
+          description: User first name
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          description: User last name
+          type: string
+          minLength: 1
+          example: Smith
+        email:
+          description: User email address
+          type: string
+          format: test
+          example: john.smith@example.com
+        avatar:
+          type: string
+          description: User avatar url.
+        theme:
+          $ref: '#/components/schemas/Theme'
+    Token:
+      type: object
+      title: Token
+      description: JWT Token for authentication.
+      properties:
+        token:
+          type: string
+          description: JWT token.
+        expiresIn:
+          type: integer
+          format: int64
+          description: Token expiration time in UNIX Timestamp.
+    LoginResponse:
+      type: object
+      title: Login Response
+      description: Login response with JWT token and user related information.
+      properties:
+        token:
+          type: string
+          description: JWT token.
+        expiresIn:
+          type: integer
+          format: int64
+          description: Token expiration time in UNIX Timestamp.
+        user:
+          $ref: '#/components/schemas/User'
+    RegisterRequest:
+      type: object
+      title: Register Request
+      description: Request for registering a new user.
+      properties:
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+        firstName:
+          description: User first name
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          description: User last name
+          type: string
+          minLength: 1
+          example: Smith
+        email:
+          description: User email address
+          type: string
+          format: test
+          example: john.smith@example.com
+        password:
+          description: password for the user
+          type: string
+          format: password
+    UsernameAvailability:
+      type: object
+      title: Username Availability
+      description: Username availability.
+      properties:
+        available:
+          type: boolean
+          description: Username availability.
+        message:
+          type: string
+          description: Username availability message.
+      required:
+        - available
+        - message
+    CheckUsernameRequest:
+      type: object
+      title: Check Username Request
+      description: Request for checking username availability.
+      properties:
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+    ConfirmUserRequest:
+      type: object
+      title: Confirm User Request
+      description: Request for confirming user registration.
+      properties:
+        token:
+          type: string
+          description: Confirmation token.
