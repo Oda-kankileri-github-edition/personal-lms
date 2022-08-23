@@ -26,8 +26,6 @@ tags:
     description: Shelf CRUD.
   - name: Books
     description: Book CRUD.
-  - name: Others
-    description: Other services.
 
 paths:
   /login:
@@ -732,6 +730,36 @@ paths:
           schema:
             type: string
             description: A string that is search through book title, description, notes, authors.
+        - in: query
+          name: tag
+          schema:
+            type: string
+            description: A string that is search through book tags.
+        - in: query
+          name: lastAdded
+          schema:
+            type: number
+            description: Return list of book that are added last by the count.
+        - in: query
+          name: notPlaced
+          schema:
+            type: boolean
+            description: Return list of book that are not placed to any shelf (shelf_id is null).
+        - in: query
+          name: count
+          schema:
+            type: number
+            description: Return the given number of books.
+        - in: query
+          name: favorite
+          schema:
+            type: boolean
+            description: Return favorite books.
+        - in: query
+          name: random
+          schema:
+            type: boolean
+            description: Return random books.
       tags:
         - Books
       responses:
@@ -936,231 +964,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /books/favorites:
+  /search:
     get:
-      operationId: getFavoriteBooks
-      summary: Favorite Books
-      description: Get favorite books.
-      parameters:
-        - in: query
-          name: count
-          schema:
-            type: number
-          description: Return list of favorite books with given count.
-      tags:
-        - Books
-      responses:
-        200:
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Books'
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        408:
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Internal Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-                /books/favorites:
-                  get:
-                    operationId: getFavoriteBooks
-                    summary: Favorite Books
-                    description: Get favorite books.
-                    parameters:
-                      - in: query
-                        name: count
-                        schema:
-                          type: number
-                        description: Return list of favorite books with given count.
-                    tags:
-                      - Books
-                    responses:
-                      200:
-                        description: Successful Response
-                        content:
-                          application/json:
-                            schema:
-                              $ref: '#/components/schemas/Books'
-                      400:
-                        description: Bad Request
-                        content:
-                          application/json:
-                            schema:
-                              $ref: '#/components/schemas/Error'
-                      401:
-                        description: Unauthorized
-                        content:
-                          application/json:
-                            schema:
-                              $ref: '#/components/schemas/Error'
-                      408:
-                        description: Request Timeout
-                        content:
-                          application/json:
-                            schema:
-                              $ref: '#/components/schemas/Error'
-                      500:
-                        description: Internal Error
-                        content:
-                          application/json:
-                            schema:
-                              $ref: '#/components/schemas/Error'
-  /books/not-placed:
-    get:
-      operationId: getNotPlacedBooks
-      summary: Not Placed Books
-      description: Get not placed books.
-      parameters:
-        - in: query
-          name: count
-          schema:
-            type: number
-          description: Return list of not placed books (empty shelf id) with given count.
-      tags:
-        - Books
-      responses:
-        200:
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Books'
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        408:
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Internal Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /books/last-added:
-    get:
-      operationId: getLastAddedBooks
-      summary: Last Added Books
-      description: Get last added books.
-      parameters:
-        - in: query
-          name: count
-          schema:
-            type: number
-          description: Return list of last added books with given count.
-      tags:
-        - Books
-      responses:
-        200:
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Books'
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        408:
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Internal Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /books/random:
-    get:
-      operationId: getRandomBooks
-      summary: Random Books
-      description: Get random books.
-      parameters:
-        - in: query
-          name: count
-          schema:
-            type: number
-          description: Return list of random books with given count.
-      tags:
-        - Books
-      responses:
-        200:
-          description: Successful Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Books'
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        408:
-          description: Request Timeout
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        500:
-          description: Internal Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /books/open-library:
-    get:
-      operationId: getOpenLibraryBooks
-      summary: Open Library Books
-      description: Get open library books.
+      operationId: searchBooks
+      summary: Search Books
+      description: Search book information through Open Library API.
       parameters:
         - in: query
           name: count
@@ -1168,6 +976,7 @@ paths:
             type: number
           description: Return list of open library searched books with given count.
         - in: query
+          required: true
           name: query
           schema:
             type: string
@@ -1241,19 +1050,6 @@ components:
           type: integer
           format: int64
           minimum: 1
-    Theme:
-      title: Theme
-      description: Front End theme settings
-      type: object
-      properties:
-        primaryColor:
-          type: string
-          pattern: ^$|^#(?:[0-9a-fA-F]{6})$
-          description: Primary theme color in hexadecimal, starting with \#
-        secondaryColor:
-          type: string
-          pattern: ^$|^#(?:[0-9a-fA-F]{6})$
-          description: Primary theme color in hexadecimal, starting with \#
     User:
       type: object
       title: User information
@@ -1286,8 +1082,6 @@ components:
         avatar:
           type: string
           description: User avatar url.
-        theme:
-          $ref: '#/components/schemas/Theme'
     Token:
       type: object
       title: Token
@@ -1512,6 +1306,17 @@ components:
           items:
             type: string
             example: romance
+        url:
+          type: string
+          description: Book URL for open library info.
+        language:
+          type: string
+          description: Book language.
+          example: English
+        rating:
+          type: integer
+          format: int64
+          description: Book rating.
         status:
           type: string
           description: Book status.
