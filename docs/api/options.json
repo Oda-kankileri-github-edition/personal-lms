@@ -1,7 +1,7 @@
 {
   "nativeScrollbars": true,
   "hideDownloadButton": true,
-  "sortTagsAlphabetically": false,
+  "sortTagsAlphabetically": true,
   "theme": {
     "breakpoints": {
       "small": "10rem",
