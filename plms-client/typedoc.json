@@ -1,0 +1,7 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/index.tsx"],
+  "name": "PMLS SDK",
+  "version": true,
+  "out": "./public/docs"
+}
