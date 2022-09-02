@@ -20,11 +20,11 @@ There are many ways in which you can participate in this project, for example:
 ## Road Map
 
 - Frontend (React/Typescript)
-  - [ ] Select a Frontend framework
-  - [ ] Create a wireframe
-  - [ ] List necessary services
-  - [ ] Create Dockerfile
-  - [ ] Create layout components
+  - [x] Select a Frontend framework
+  - [x] Create a wireframe
+  - [x] List necessary services
+  - [x] Create Dockerfile
+  - [x] Create layout components
   - [ ] Create pages
   - [ ] Create common components
 - Backend (Python/FastAPI)
