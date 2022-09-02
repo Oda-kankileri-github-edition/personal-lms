@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+ front-end:
+   build:
+     context: ./plms-client/
+     dockerfile: Dockerfile
+   volumes:
+     - ./plms-client:/frontend
+   ports:
+     - "3000:3000"
+   environment:
+     - NODE_ENV=${NODE_ENV}
+     - API_URL=${API_URL}
+     - API_PORT=${API_PORT}
