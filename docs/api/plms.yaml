@@ -1,0 +1,1348 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: PLMS Server
+  contact:
+    email: mohkargan@gmail.com
+    url: 'https://github.com/Oda-kankileri-github-edition'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  x-logo:
+    url: './img/logo192.png'
+    altText: Trajectory logo
+  description: |
+    This is an **example** API to demonstrate features of the OpenAPI
+    specification.
+servers:
+  - url: https://www.plms.com/api
+    description: sample server
+tags:
+  - name: Auth
+    description: User login related services.
+  - name: Racks
+    description: Bookrack CRUD.
+  - name: Shelves
+    description: Shelf CRUD.
+  - name: Books
+    description: Book CRUD.
+
+paths:
+  /login:
+    post:
+      operationId: login
+      summary: Login
+      description: Login to system and get JWT token and user info as response.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: username
+                password:
+                  type: string
+                  format: password
+                  description: password
+              required:
+                - username
+                - password
+      responses:
+        200:
+          description: Login Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /logout:
+    post:
+      operationId: logout
+      summary: Logout
+      description: Logout from system by clearing JWT token.
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /register:
+    post:
+      operationId: register
+      summary: Register
+      description: Register a new user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      tags:
+        - Auth
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /renew-token:
+    post:
+      operationId: renewToken
+      summary: Renew Token
+      description: Renew JWT token.
+      tags:
+        - Auth
+      responses:
+        200:
+          description: JWT Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /check-username:
+    post:
+      operationId: checkUsername
+      summary: Check Username
+      description: Check if username is available.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckUsernameRequest'
+      responses:
+        200:
+          description: Username availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameAvailability'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /confirm-user:
+    post:
+      operationId: confirmUser
+      summary: Confirm User
+      description: Confirm user registration.
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmUserRequest'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /racks:
+    get:
+      operationId: getRacks
+      summary: Get Racks
+      description: Get all racks.
+      parameters:
+        - in: query
+          name: isVirtual
+          schema:
+            type: boolean
+          description: Return virtual racks or physical racks.
+      tags:
+        - Racks
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Racks'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: updateRack
+      summary: Update Rack
+      description: Update a rack.
+      tags:
+        - Racks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rack'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createRack
+      summary: Create Rack
+      description: Create a rack.
+      tags:
+        - Racks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rack'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteRack
+      summary: Delete Rack
+      description: Delete a rack.
+      tags:
+        - Racks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rack'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /racks/{id}:
+    get:
+      operationId: getRack
+      summary: Get Rack
+      description: Get a rack.
+      tags:
+        - Racks
+      parameters:
+        - in: path
+          name: id
+          description: Rack ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rack'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /shelves:
+    get:
+      operationId: getShelves
+      summary: Get Shelves
+      description: Get all shelves.
+      tags:
+        - Shelves
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelves'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: updateShelf
+      summary: Update Shelf
+      description: Update shelf.
+      tags:
+        - Shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createShelf
+      summary: Create Shelf
+      description: Create a shelf.
+      tags:
+        - Shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteShelf
+      summary: Delete Shelf
+      description: Delete a shelf.
+      tags:
+        - Shelves
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shelf'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /shelves/{id}:
+    get:
+      operationId: getShelf
+      summary: Get Shelf
+      description: Get a shelf.
+      tags:
+        - Shelves
+      parameters:
+        - in: path
+          name: id
+          description: Shelf ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shelf'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /books:
+    get:
+      operationId: getBooks
+      summary: Get Books
+      description: Get all books.
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            description: Book status.
+            enum:
+              - READ
+              - READING
+              - TO_READ
+              - NOT_READ
+              - NOT_AVAILABLE
+          description: Return list of books with given status.
+        - in: query
+          name: query
+          schema:
+            type: string
+            description: A string that is search through book title, description, notes, authors.
+        - in: query
+          name: tag
+          schema:
+            type: string
+            description: A string that is search through book tags.
+        - in: query
+          name: lastAdded
+          schema:
+            type: number
+            description: Return list of book that are added last by the count.
+        - in: query
+          name: notPlaced
+          schema:
+            type: boolean
+            description: Return list of book that are not placed to any shelf (shelf_id is null).
+        - in: query
+          name: count
+          schema:
+            type: number
+            description: Return the given number of books.
+        - in: query
+          name: favorite
+          schema:
+            type: boolean
+            description: Return favorite books.
+        - in: query
+          name: random
+          schema:
+            type: boolean
+            description: Return random books.
+      tags:
+        - Books
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Books'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      operationId: updateBook
+      summary: Update Book
+      description: Update book.
+      tags:
+        - Books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: createBook
+      summary: Create Book
+      description: Create a book.
+      tags:
+        - Books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteBook
+      summary: Delete Book
+      description: Delete a book.
+      tags:
+        - Books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /books/{id}:
+    get:
+      operationId: getBook
+      summary: Get Book
+      description: Get a book.
+      tags:
+        - Books
+      parameters:
+        - in: path
+          name: id
+          description: Book ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /search:
+    get:
+      operationId: searchBooks
+      summary: Search Books
+      description: Search book information through Open Library API.
+      parameters:
+        - in: query
+          name: count
+          schema:
+            type: number
+          description: Return list of open library searched books with given count.
+        - in: query
+          required: true
+          name: query
+          schema:
+            type: string
+          description: Search query for open library search API.
+      tags:
+        - Books
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Books'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        408:
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Success:
+      type: object
+      title: Success Response
+      description: Success title and message with request time.
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Request message
+    Error:
+      type: object
+      title: Error Response
+      description: Error title and message with request time.
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error title
+        message:
+          type: string
+          description: Error message
+        timestamp:
+          type: integer
+          format: int64
+          minimum: 1
+    User:
+      type: object
+      title: User information
+      description: User information for FE usage.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: User id in uuid v4 format.
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+        firstName:
+          description: User first name
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          description: User last name
+          type: string
+          minLength: 1
+          example: Smith
+        email:
+          description: User email address
+          type: string
+          format: test
+          example: john.smith@example.com
+        avatar:
+          type: string
+          description: User avatar url.
+    Token:
+      type: object
+      title: Token
+      description: JWT Token for authentication.
+      properties:
+        token:
+          type: string
+          description: JWT token.
+        expiresIn:
+          type: integer
+          format: int64
+          description: Token expiration time in UNIX Timestamp.
+    LoginResponse:
+      type: object
+      title: Login Response
+      description: Login response with JWT token and user related information.
+      properties:
+        token:
+          type: string
+          description: JWT token.
+        expiresIn:
+          type: integer
+          format: int64
+          description: Token expiration time in UNIX Timestamp.
+        user:
+          $ref: '#/components/schemas/User'
+    RegisterRequest:
+      type: object
+      title: Register Request
+      description: Request for registering a new user.
+      properties:
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+        firstName:
+          description: User first name
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          description: User last name
+          type: string
+          minLength: 1
+          example: Smith
+        email:
+          description: User email address
+          type: string
+          format: test
+          example: john.smith@example.com
+        password:
+          description: password for the user
+          type: string
+          format: password
+    UsernameAvailability:
+      type: object
+      title: Username Availability
+      description: Username availability.
+      properties:
+        available:
+          type: boolean
+          description: Username availability.
+        message:
+          type: string
+          description: Username availability message.
+      required:
+        - available
+        - message
+    CheckUsernameRequest:
+      type: object
+      title: Check Username Request
+      description: Request for checking username availability.
+      properties:
+        username:
+          description: User supplied username
+          type: string
+          minLength: 4
+          example: John78
+    ConfirmUserRequest:
+      type: object
+      title: Confirm User Request
+      description: Request for confirming user registration.
+      properties:
+        token:
+          type: string
+          description: Confirmation token.
+    Racks:
+      type: object
+      title: Racks
+      description: List of Racks.
+      properties:
+        racks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rack'
+    Rack:
+      type: object
+      title: Book Rack
+      description: Book Rack information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Rack id in uuid v4 format.
+        name:
+          type: string
+          description: Rack name.
+        description:
+          type: string
+          description: Rack description.
+        isVirtual:
+          type: boolean
+          description: Rack is virtual (for e-books) or physical.
+        shelves:
+          type: array
+          description: Rack shelves.
+          items:
+            $ref: '#/components/schemas/Shelf'
+    Shelves:
+      type: array
+      title: Shelves
+      description: List of shelves.
+      items:
+        $ref: '#/components/schemas/Shelf'
+    Shelf:
+      type: object
+      title: Book Shelf
+      description: Book Shelf information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Shelf id in uuid v4 format.
+        name:
+          type: string
+          description: Shelf name.
+        description:
+          type: string
+          description: Shelf description.
+        isAvailable:
+          type: boolean
+          description: Shelf is available to add books.
+        books:
+          type: array
+          description: Shelf books.
+          items:
+            $ref: '#/components/schemas/Book'
+        rack_id:
+          type: string
+          format: uuid
+          description: Shelf rack id in uuid v4 format.
+    Books:
+      type: array
+      title: Books
+      description: List of books.
+      items:
+        $ref: '#/components/schemas/Book'
+    Book:
+      type: object
+      title: Book
+      description: Book information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Book id in uuid v4 format.
+        title:
+          type: string
+          description: Book title.
+        description:
+          type: string
+          description: Book description.
+        isbn:
+          type: string
+          description: Book ISBN either 10 or 13.
+        authors:
+          title: Authors
+          description: Book authors.
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        publisher:
+          title: Publisher
+          description: Book publisher.
+          type: string
+          example: O'Reilly
+        publishedDate:
+          title: Published Date
+          description: Book published date.
+          type: string
+          example: 2020-01-01
+        pageCount:
+          title: Page Count
+          description: Book page count.
+          type: integer
+          format: int64
+          example: 100
+        coverUrl:
+          title: Cover URL
+          description: Book cover URL.
+          type: string
+          example: https://www.example.com/cover.jpg
+        notes:
+          title: Notes
+          description: Book notes.
+          type: string
+          example: This is a great book.
+        readPage:
+          title: Read Page
+          description: Book read page.
+          type: integer
+          format: int64
+          example: 100
+        shelf_id:
+          type: string
+          format: uuid
+          description: Shelf id in uuid v4 format.
+        tags:
+          type: array
+          description: Book tags.
+          items:
+            type: string
+            example: romance
+        url:
+          type: string
+          description: Book URL for open library info.
+        language:
+          type: string
+          description: Book language.
+          example: English
+        rating:
+          type: integer
+          format: int64
+          description: Book rating.
+        status:
+          type: string
+          description: Book status.
+          enum:
+            - READ
+            - READING
+            - TO_READ
+            - NOT_READ
+            - NOT_AVAILABLE
+    Author:
+      type: object
+      title: Author
+      description: Author information.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Author id in uuid v4 format.
+        name:
+          type: string
+          description: Author name.
+        description:
+          type: string
+          description: Author description.
+        books:
+          type: array
+          description: Author books.
+          items:
+            $ref: '#/components/schemas/Book'

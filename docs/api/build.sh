@@ -1,0 +1,1 @@
+redoc-cli build -o index.html plms.yaml -t template.hbs --options=options.json
