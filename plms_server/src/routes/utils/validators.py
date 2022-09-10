@@ -1,6 +1,5 @@
-from flask import Flask
-
-app = Flask("PLMS-App")
+def validate_email(email: str):
+    pass
 
 
 def validate_content_type(content_type: str):

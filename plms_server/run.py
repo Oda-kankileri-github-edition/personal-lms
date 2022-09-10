@@ -1,5 +1,11 @@
+from flask import Flask
+
 from src.database.entity import create_database
-from src.service.utils import app
+from src.routes import *
+
+
+app = Flask("PLMS-App")
+app.register_blueprint(routes)
 
 
 if __name__ == '__main__':

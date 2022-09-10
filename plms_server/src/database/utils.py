@@ -3,14 +3,14 @@ import os
 import logging
 
 from sqlalchemy import create_engine
-
+from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__file__)
 
 
 DEFAULT_USERNAME = "postgres"
 DEFAULT_PASSWORD = "admin"
-DEFAULT_URL = "postgres_db_service"
+DEFAULT_URL = "localhost"
 DEFAULT_PORT = "5432"
 DEFAULT_DATABASE = "plms"
 
@@ -37,7 +37,14 @@ def get_engine():
     return create_engine(conn_string, echo=True, future=True)
 
 
+engine = get_engine()
+
+
 class StatusEnum(Enum):
     WANT_TO_READ = auto()
     READING = auto()
     READ = auto()
+
+
+def get_session():
+    return Session(engine)

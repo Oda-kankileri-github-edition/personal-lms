@@ -10,11 +10,10 @@ from sqlalchemy import (BIGINT,
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base, relationship
 
-from .utils import get_engine, StatusEnum
+from .utils import engine, StatusEnum
 
 
 Base = declarative_base()
-engine = get_engine()
 
 
 # TODO Add is_active, created_date and modified_date columns to every table
@@ -38,9 +37,6 @@ class User(Base):
     avatar_id = Column(UUID, ForeignKey("avatars.id"), nullable=True)
     password = Column(String)
     is_active = Column(Boolean, default=False)
-
-    avatar = relationship("Avatar", back_populates="avatars")
-    racks = relationship("Rack", back_populates="racks")
 
 
 class Book(Base):
@@ -79,7 +75,6 @@ class Rack(Base):
 
     # Relations
     user_id = Column(UUID, ForeignKey("users.id"), nullable=False)
-    shelves = relationship("Shelf", back_populates="shelves")
 
 
 class Shelf(Base):
