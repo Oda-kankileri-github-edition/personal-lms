@@ -1,10 +1,14 @@
-import Layout from './components/Layout';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+
 function App() {
   return (
     <div className="App">
-      <Layout imageURL="https://lh3.googleusercontent.com/jE9-XRe2LGT7BQLeV8U0iZG1DCIwgVPvJAA1XIQAE-q46nCiR5XPqJRXIF6Th4_QR0fLyD3OKko8jT-2OQ=s2154-rw-no">
-        <h1>Hello World</h1>
-      </Layout>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
