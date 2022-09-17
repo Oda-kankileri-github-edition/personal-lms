@@ -7,7 +7,6 @@ from src.routes.dto.user import RegisterRequest
 from src.routes.exceptions import UserAlreadyExistsError
 
 from src.database.utils import get_session
-from src.service.exceptions import JsonToDtoParsingError
 
 
 class UserService:
@@ -15,30 +14,25 @@ class UserService:
         self.session = db_session
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    def is_user_exists(self, user: User) -> bool:
-        return self.session\
-                   .query(User.email)\
-                   .filter_by(username=user.username)\
-                   .first() is not None
-
     def save_user(self, register_request: RegisterRequest):
         self.logger.debug(f"Saving user: {register_request}")
-        try:
-            user = User(
-                username=register_request.username,
-                email=register_request.email,
-                name=register_request.first_name,
-                surname=register_request.last_name,
-                password=register_request.password
-            )
-        except KeyError as e:
-            self.logger.error(e)
-            raise JsonToDtoParsingError()
-        if self.is_user_exists(user):
-            raise UserAlreadyExistsError(user.username)
+        if self.is_user_exists(register_request.username):
+            raise UserAlreadyExistsError(register_request.username)
+        user = User(
+            username=register_request.username,
+            email=register_request.email,
+            name=register_request.first_name,
+            surname=register_request.last_name,
+            password=register_request.password
+        )
         self.session.add(user)
         self.session.commit()
-        return True
+
+    def is_user_exists(self, username: str) -> bool:
+        return self.session\
+                   .query(User.username)\
+                   .filter_by(username=username)\
+                   .first() is not None
 
 
 def get_user_service() -> UserService:

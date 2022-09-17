@@ -2,7 +2,7 @@ from flask import request
 
 from . import routes
 from .dto.common import SuccessResponse
-from .dto.user import RegisterRequest
+from .dto.user import RegisterRequest, UserAvailabilityResponse
 from .utils.handlers import router_handler
 from ..service.user import get_user_service
 from ..service.parsers import RegisterUserMapper
@@ -21,6 +21,9 @@ def register_user():
     return SuccessResponse("User has been successfully registered")
 
 
-
-
-
+@routes.route('/api/check-username', methods=["POST"])
+@router_handler
+def is_user_exist():
+    is_username_available = not get_user_service().is_user_exists(request.get_json()['username'])
+    message = 'Username is available' if is_username_available else 'Username is already taken'
+    return UserAvailabilityResponse(is_username_available, message)
