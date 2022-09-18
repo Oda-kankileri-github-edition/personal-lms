@@ -34,6 +34,12 @@ class LoginResponse:
 
 
 @dataclass(frozen=True)
+class RenewTokenResponse:
+    token: str
+    expiresIn: int
+
+
+@dataclass(frozen=True)
 class UserAvailabilityResponse:
     available: bool
     message: str

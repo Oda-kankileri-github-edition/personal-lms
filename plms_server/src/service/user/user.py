@@ -4,9 +4,15 @@ from sqlalchemy.orm import Session
 
 from src.database.entity import User, TokenWhiteList
 from src.database.utils import get_session
-from src.routes.dto.user import LoginRequest, LoginResponse, RegisterRequest, UserDto
+from src.routes.dto.user import (LoginRequest,
+                                 LoginResponse,
+                                 RegisterRequest,
+                                 RenewTokenResponse,
+                                 UserDto)
 from src.routes.exceptions import UnauthorizedError, UserAlreadyExistsError
 from src.service.user.jwt_auth import JwtCreator
+
+from src.routes.dto.user import RenewTokenResponse
 
 
 class UserService:
@@ -28,20 +34,29 @@ class UserService:
         self.session.add(user)
         self.session.commit()
 
-    def get_user(self, username):
+    def get_user_by_username(self, username):
         return self.session\
                    .query(User)\
                    .filter_by(username=username)\
                    .first()
 
-    def is_user_exists(self, username: str) -> bool:
-        user = self.get_user(username)
-        return user is not None
+    def get_user_by_id(self, user_id):
+        return self.session\
+                   .query(User)\
+                   .filter_by(id=user_id)\
+                   .first()
 
-    def login_user(self, login_request: LoginRequest, jwt_creator: JwtCreator):
-        user = self.get_user(login_request.username)
+    def _raise_inactive_user(self, user: User):
         if not user.is_active:
             raise UnauthorizedError(reason="User is not active")
+
+    def is_user_exists(self, username: str) -> bool:
+        user = self.get_user_by_username(username)
+        return user is not None
+
+    def login_user(self, login_request: LoginRequest, jwt_creator: JwtCreator) -> LoginResponse:
+        user = self.get_user_by_username(login_request.username)
+        self._raise_inactive_user(user)
         if login_request.password != user.password:
             raise UnauthorizedError(reason="Invalid password")
         token, expires_in = jwt_creator.generate(user)
@@ -57,6 +72,19 @@ class UserService:
                 avatar=user.avatar_id
             )
         )
+
+    def renew_session(self, token, jwt_creator):
+        token_whitelist = self.session\
+            .query(TokenWhiteList)\
+            .filter_by(token=token)\
+            .first()
+        if token_whitelist is None:
+            raise UnauthorizedError('Invalid Token')
+        user = self.get_user_by_id(token_whitelist.user_id)
+        self._raise_inactive_user(user)
+
+        token, expires_in = jwt_creator.generate(user)
+        return RenewTokenResponse(token, expires_in)
 
 
 def get_user_service() -> UserService:

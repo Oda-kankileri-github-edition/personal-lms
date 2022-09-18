@@ -114,7 +114,7 @@ class JwtRequired:
         self._func = func
 
     @staticmethod
-    def _parse_token_from_header(headers):
+    def parse_token_from_header(headers):
         try:
             assert 'Authorization' in headers
             token = headers['Authorization'].split('Bearer')[1].strip()
@@ -123,14 +123,13 @@ class JwtRequired:
             raise UnauthorizedError('Missing authentication data')
 
     @staticmethod
-    def _validate(token):
+    def validate(token):
         validator = JwtValidator(get_session())
         validator.validate(token)
 
     def __call__(self, *args, **kwargs):
-        # decoding the payload to fetch the stored details
-        token = JwtRequired._parse_token_from_header(request.headers)
-        JwtRequired._validate(token)
+        token = JwtRequired.parse_token_from_header(request.headers)
+        JwtRequired.validate(token)
         return self._func(*args, **kwargs)
 
 
