@@ -1,20 +1,10 @@
-from abc import ABC, abstractmethod
-from typing import Dict
-
-from plms_server.src.routes.dto.user import RegisterRequest
-from plms_server.src.routes.exceptions import JsonToDtoParsingError
+from src.routes.dto.user import RegisterRequest, LoginRequest
+from src.routes.exceptions import JsonToDtoParsingError
 
 
-class JsonToObjectMapper(ABC):
+class UserServiceMapper:
     @staticmethod
-    @abstractmethod
-    def from_json(json_data: Dict):
-        pass
-
-
-class RegisterUserMapper(JsonToObjectMapper):
-    @staticmethod
-    def from_json(json_data: dict) -> RegisterRequest:
+    def map_register_request(json_data: dict) -> RegisterRequest:
         try:
             request = RegisterRequest(
                 username=json_data["username"],
@@ -24,5 +14,17 @@ class RegisterUserMapper(JsonToObjectMapper):
                 password=json_data["password"]
             )
             return request
-        except KeyError as e:
+        except KeyError:
             raise JsonToDtoParsingError()
+
+    @staticmethod
+    def map_login_request(json_data: dict) -> LoginRequest:
+        try:
+            request = LoginRequest(
+                username=json_data["username"],
+                password=json_data["password"]
+            )
+            return request
+        except KeyError:
+            raise JsonToDtoParsingError()
+

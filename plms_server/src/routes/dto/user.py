@@ -11,6 +11,29 @@ class RegisterRequest:
 
 
 @dataclass(frozen=True)
+class UserDto:
+    id: str
+    username: str
+    firstName: str
+    lastName: str
+    email: str
+    avatar: str
+
+
+@dataclass(frozen=True)
+class LoginRequest:
+    username: str
+    password: str
+
+
+@dataclass(frozen=True)
+class LoginResponse:
+    token: str
+    expiresIn: int
+    user: UserDto
+
+
+@dataclass(frozen=True)
 class UserAvailabilityResponse:
     available: bool
     message: str

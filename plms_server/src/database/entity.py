@@ -138,5 +138,13 @@ class ActivationLink(Base):
     link = Column(String, nullable=True)
 
 
+class TokenWhiteList(Base):
+    __tablename__ = "tokens"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
+    user_id = Column(UUID, ForeignKey("users.id"), primary_key=True)
+    token = Column(String, nullable=False)
+
+
 def create_database():
     Base.metadata.create_all(engine)
