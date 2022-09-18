@@ -38,28 +38,30 @@ class JwtAbstract(ABC):
 
 class JwtCreator(JwtAbstract):
     def generate(self, user: User) -> Tuple[str, int]:
-        token = self._encode_auth_token(user.id)
+        token, expiry = self._encode_auth_token(user.id)
         self._whitelist_token(token, user)
-        return token, self.EXPIRY_HOURS
+        return token, expiry
 
-    def _encode_auth_token(self, user_id: uuid.UUID):
+    def _encode_auth_token(self, user_id: uuid.UUID) -> Tuple[str, int]:
         self.logger.info('Generating token')
         try:
+            start = int(time.time())
+            expiry_date = int(time.time() + self.EXPIRY_HOURS * 60 * 60)
             payload = {
-                'expiry': int(time.time() + self.EXPIRY_HOURS * 60 * 60),
-                'start': int(time.time()),
+                'expiry': expiry_date,
+                'start': start,
                 'user_id': str(user_id)
             }
             return jwt.encode(
                 payload,
                 self._get_secret_key(),
                 algorithm=self.ALGORITHM
-            )
+            ), expiry_date
         except Exception as e:
             self.logger.exception(f'An error occurred during token creation: {e}')
             raise JwtError()
 
-    def _whitelist_token(self, token: str, user: User):
+    def _whitelist_token(self, token: str, user: User) -> None:
         self.delete_user_token(user)
         token = TokenWhiteList(
             user_id=str(user.id),
@@ -68,7 +70,7 @@ class JwtCreator(JwtAbstract):
         self.db_session.add(token)
         self.db_session.commit()
 
-    def delete_user_token(self, user: User):
+    def delete_user_token(self, user: User) -> None:
         for token_whitelist in self._get_user_tokens_from_db(user.id):
             self.db_session\
                 .query(TokenWhiteList)\
