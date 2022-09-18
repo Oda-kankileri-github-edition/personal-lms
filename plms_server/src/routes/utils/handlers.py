@@ -26,7 +26,7 @@ def router_handler(func):
     def wrapped_func(*args, **kwargs):
         start = time.time()
         result = func(*args, **kwargs)
-        result = json.dumps(_nested_object_parser(result))
+        result = json.dumps(_nested_object_parser(result), indent=4)
         logger.info(f"Response returned in {time.time() - start} seconds.")
         return result
     return wrapped_func

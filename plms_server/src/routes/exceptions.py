@@ -31,7 +31,7 @@ class UnauthorizedError(HTTPException):
 
     @property
     def description(self):
-        return f"Can not login: {self.reason}"
+        return f"{self.reason}"
 
 
 @routes.errorhandler(HTTPException)
