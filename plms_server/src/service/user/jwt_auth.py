@@ -1,7 +1,8 @@
-import datetime
 import logging
 import os
+import time
 import uuid
+
 from typing import Tuple
 
 import jwt
@@ -29,8 +30,8 @@ class JwtCreator:
         self.logger.info('Generating token')
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, hours=self.EXPIRY_HOURS),
-                'iat': datetime.datetime.utcnow(),
+                'exp': time.time() + self.EXPIRY_HOURS * 60 * 60,
+                'iat': time.time(),
                 'sub': str(user_id)
             }
             return jwt.encode(
